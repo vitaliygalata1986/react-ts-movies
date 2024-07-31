@@ -1,3 +1,4 @@
+import 'semantic-ui-css/semantic.min.css';
 import styles from './MovieCard.module.scss';
 import { Link } from 'react-router-dom';
 
