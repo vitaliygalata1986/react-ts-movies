@@ -3,7 +3,7 @@ import { Movie } from '../../reducers/movies'; // импортируем инт�
 import { MovieCard } from './MovieCard';
 import { connect } from 'react-redux'; // : используется для подключения компонента к Redux-хранилищу
 import { RootState } from '../../store'; // импортируем тип корневого состояния Redux-хранилища
-
+import styles from './Movies.module.scss';
 // Определяем интерфейс для пропсов:
 interface Props {
   movies: Movie[];
@@ -14,7 +14,7 @@ interface Props {
 function Movies({ movies }: Props) {
   return (
     <section>
-      <div className="Movies-list">
+      <div className={styles.list}>
         {movies.map((m) => (
           <MovieCard
             key={m.id}
