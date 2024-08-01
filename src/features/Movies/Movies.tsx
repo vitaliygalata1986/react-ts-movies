@@ -5,30 +5,32 @@ import { connect } from 'react-redux'; // : используется для по
 import { RootState } from '../../store'; // импортируем тип корневого состояния Redux-хранилища
 import styles from './Movies.module.scss';
 import { useEffect, useState } from 'react';
-
-async function getNowPlaying() {
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ODk0ZWQ4NjJjNjBiNzVlNWNiOWE2YWY3YjUzMDVhZiIsIm5iZiI6MTcyMjQ2MDQ5MC44ODUzNjgsInN1YiI6IjY2YWFhMjAyNzM5MDVjMjMyMTY4M2M3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vKNd1ScJYjJJPPKAkqvW-Bx6a0sDS4HZtV3Uq1MD3do',
-    }, // передаем токен Bearer
-  };
-  const response = await fetch(
-    'https://api.themoviedb.org/3/movie/now_playing?page=1',
-    options
-  );
-  return await response.json();
-}
+import { client, MovieDetails } from '../../api/tmdb';
 
 export function MoviesFetch() {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<MovieDetails[]>([]);
+  console.log(movies);
 
   useEffect(() => {
     async function loadData() {
-      const response = await getNowPlaying();
-      setMovies(response.results);
+      const config = await client.getConfiguration();
+      const imageUrl = config.images.base_url; // базовый url с изображением
+      // console.lo ('imageUrl', imageUrl); // http://image.tmdb.org/t/p/
+
+      const results = await client.getNowPlaying();
+      // console.log(results);
+
+      const mappedResults: Movie[] = results.map((movie) => ({
+        id: movie.id,
+        title: movie.title,
+        overview: movie.overview,
+        popularity: movie.popularity,
+        image: movie.backdrop_path
+          ? `${imageUrl}w780${movie.backdrop_path}`
+          : undefined,
+      })); // возвращаем отфильтрованный объект с фильмом
+
+      setMovies(mappedResults);
     }
     loadData();
   }, []);
@@ -55,6 +57,7 @@ function Movies({ movies }: Props) {
             title={m.title}
             overview={m.overview}
             popularity={m.popularity}
+            image={m.image}
           />
         ))}
       </div>
