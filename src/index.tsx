@@ -13,7 +13,8 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import Movies from './features/Movies/Movies';
+// import Movies, { MoviesFetch } from './features/Movies/Movies';
+import { MoviesFetch } from './features/Movies/Movies';
 import About from './features/About/About';
 
 const router = createBrowserRouter([
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/movies',
-        element: <Movies />,
+        element: <MoviesFetch />,
       },
       {
         path: '/about',
